@@ -261,7 +261,7 @@ export default function MemoriseScreen() {
       ) : null}
 
       <Text style={styles.credit}>
-        Quran text: {SOURCES.arabic}. Translation: {SOURCES.english}.
+        Quran text: {SOURCES.arabic}. {SOURCES.english}.
       </Text>
     </Screen>
   );

@@ -46,7 +46,7 @@ export default function SettingsScreen() {
       <Card style={{ gap: 10, marginTop: 16 }}>
         <Text style={styles.fieldLabel}>Sources</Text>
         <Text style={text.small}>Quran text: {SOURCES.arabic}.</Text>
-        <Text style={text.small}>English meanings: {SOURCES.english}.</Text>
+        <Text style={text.small}>{SOURCES.english}.</Text>
       </Card>
 
       <Card style={{ gap: 12, marginTop: 16 }}>

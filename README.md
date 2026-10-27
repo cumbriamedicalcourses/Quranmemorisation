@@ -30,7 +30,7 @@ The Quran text is never typed or scanned. `npm run build:data` regenerates `src/
 | What | Source | Terms |
 | --- | --- | --- |
 | Arabic text | King Fahd Glorious Quran Printing Complex, Hafs Uthmani text, via QuranEnc, packaged in [quran-json](https://github.com/risan/quran-json) 3.1.2 | Copied verbatim, never altered |
-| English meanings | Talal Itani, [ClearQuran](https://clearquran.com) | Creative Commons Attribution, No Derivatives: shown word for word with credit |
+| English meanings | Talal Itani, [ClearQuran](https://clearquran.com) | Written permission from Talal Itani, including commercial use ([details](data/sources/itani-clearquran.PERMISSION.md)). Shown word for word with the credit line "Translation by Talal Itani, ClearQuran.com" |
 | Fonts | Amiri Quran, Manrope and Newsreader from Google Fonts | SIL Open Font License |
 
 Checks done when building the data:

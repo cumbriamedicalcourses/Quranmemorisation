@@ -2,7 +2,8 @@
 //
 // Arabic text: King Fahd Complex (KFGQPC) Hafs Uthmani text, as published by
 // QuranEnc and packaged in quran-json 3.1.2. Copied verbatim; never edited.
-// English: Talal Itani, ClearQuran, CC BY-ND. Copied verbatim from the text
+// English: Talal Itani, ClearQuran, used with his written permission (see
+// data/sources/itani-clearquran.PERMISSION.md). Copied verbatim from the text
 // export of the ClearQuran PDF; only line wrapping and page furniture are
 // removed.
 //
@@ -92,7 +93,7 @@ const data = {
   basmala: arabic[0].verses[0].text,
   sources: {
     arabic: 'King Fahd Glorious Quran Printing Complex, Hafs Uthmani text (via QuranEnc)',
-    english: 'Talal Itani, ClearQuran (CC BY-ND)',
+    english: 'Translation by Talal Itani, ClearQuran.com',
   },
   surahs: out,
 };
