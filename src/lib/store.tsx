@@ -4,7 +4,9 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState, t
 import { estimateLines, nextLesson, type LessonRef } from './quran';
 import { addDays, isOlder, newPortion, olderCycleDays, review, type Day, type Portion, type Rating } from './schedule';
 
-export type Script = 'uthmani' | 'indopak';
+import type { Script } from './script';
+
+export type { Script };
 
 export interface Settings {
   name: string;

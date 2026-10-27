@@ -25,6 +25,7 @@ function Screens() {
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
     AmiriQuran_400Regular,
+    DigitalKhattIndoPak: require('../../assets/fonts/DigitalKhattIndoPak.ttf'),
     Manrope_400Regular,
     Manrope_500Medium,
     Manrope_600SemiBold,

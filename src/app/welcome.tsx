@@ -9,7 +9,7 @@ import { colors, fonts, radius } from '@/theme';
 
 const SCRIPTS: { value: Script; title: string; detail: string; available: boolean }[] = [
   { value: 'uthmani', title: 'Uthmani', detail: 'Madani Mushaf, 15 lines a page', available: true },
-  { value: 'indopak', title: 'Indopak', detail: '13-line South Asian Mushaf · coming soon', available: false },
+  { value: 'indopak', title: 'Indopak', detail: 'South Asian Mushaf style', available: true },
 ];
 
 export default function WelcomeScreen() {

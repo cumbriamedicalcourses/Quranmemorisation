@@ -29,21 +29,24 @@ The Quran text is never typed or scanned. `npm run build:data` regenerates `src/
 
 | What | Source | Terms |
 | --- | --- | --- |
-| Arabic text | King Fahd Glorious Quran Printing Complex, Hafs Uthmani text, via QuranEnc, packaged in [quran-json](https://github.com/risan/quran-json) 3.1.2 | Copied verbatim, never altered |
+| Arabic text (Uthmani) | King Fahd Glorious Quran Printing Complex, Hafs Uthmani text, via QuranEnc, packaged in [quran-json](https://github.com/risan/quran-json) 3.1.2 | Copied verbatim, never altered |
+| Arabic text (Indopak) | King Fahd Glorious Quran Printing Complex, IndoPak Nastaleeq text, in Unicode from [quran-api](https://github.com/fawazahmed0/quran-api) ([details](data/sources/kfgqpc-indopak.SOURCE.md)) | Copied verbatim; two marks are swapped on screen only, for the font |
 | English meanings | Talal Itani, [ClearQuran](https://clearquran.com) | Written permission from Talal Itani, including commercial use ([details](data/sources/itani-clearquran.PERMISSION.md)). Shown word for word with the credit line "Translation by Talal Itani, ClearQuran.com" |
-| Fonts | Amiri Quran, Manrope and Newsreader from Google Fonts | SIL Open Font License |
+| Fonts | Amiri Quran, Manrope and Newsreader from Google Fonts; [DigitalKhatt IndoPak](https://github.com/DigitalKhatt/indopakfont) by Amine Anane and Tarteel (`assets/fonts`) | SIL Open Font License |
 
 Checks done when building the data:
 
-- Every surah's verse count matches between the Arabic and the English (the build stops if not): 37 surahs, 564 verses.
+- Every surah's verse count matches between the Uthmani, Indopak and English texts (the build stops if not): 37 surahs, 564 verses.
 - The Arabic letters of all 564 verses were compared with the Tanzil Project's text, a separate source. They match, except one spelling convention for a hamza in 80:37 (امرئ written امري with a small hamza in the Uthmani script).
 
-A hafiz must still read the text in the app against a printed Mushaf before launch.
+- The Indopak text of Juz 30 was compared word by word with the Digital Khatt project's IndoPak text. The words match apart from spelling conventions, listed in the [source notes](data/sources/kfgqpc-indopak.SOURCE.md).
+
+A hafiz must still read the text in the app against a printed Mushaf, in both scripts, before launch.
 
 ## Still to do
 
 - Recitation audio, once the King Fahd Complex confirms permission.
-- Indopak script (13-line).
+- The 13-line Indopak page layout (which words sit on each line), once a source with a clear licence is found.
 - The King Fahd Complex Uthmanic Hafs font in place of Amiri Quran, once its licence is confirmed.
 - Accounts, parent-managed accounts for children, Premium and payments.
 - Reasons for revelation.

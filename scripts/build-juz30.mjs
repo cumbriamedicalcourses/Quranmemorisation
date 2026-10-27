@@ -2,12 +2,14 @@
 //
 // Arabic text: King Fahd Complex (KFGQPC) Hafs Uthmani text, as published by
 // QuranEnc and packaged in quran-json 3.1.2. Copied verbatim; never edited.
+// Indopak: the King Fahd Complex IndoPak (Nastaleeq) text in Unicode, from
+// quran-api (see data/sources/kfgqpc-indopak.SOURCE.md). Copied verbatim.
 // English: Talal Itani, ClearQuran, used with his written permission (see
 // data/sources/itani-clearquran.PERMISSION.md). Copied verbatim from the text
 // export of the ClearQuran PDF; only line wrapping and page furniture are
 // removed.
 //
-// The script fails if any surah's verse count differs between the two sources,
+// The script fails if any surah's verse count differs between the sources,
 // so a parsing slip can never silently shift a translation onto the wrong verse.
 //
 // Usage: node scripts/build-juz30.mjs
@@ -21,6 +23,7 @@ const FIRST_SURAH = 78;
 const LAST_SURAH = 114;
 
 const arabic = JSON.parse(readFileSync(join(root, 'data/sources/kfgqpc-hafs.quranenc.json'), 'utf8'));
+const indopak = JSON.parse(readFileSync(join(root, 'data/sources/kfgqpc-indopak.quran-api.json'), 'utf8')).quran;
 const itaniLines = readFileSync(join(root, 'data/sources/itani-clearquran.txt'), 'utf8').split(/\r?\n/);
 
 function parseItani(lines) {
@@ -65,6 +68,13 @@ function parseItani(lines) {
 }
 
 const itani = parseItani(itaniLines);
+
+const indopakBySurah = new Map();
+for (const v of indopak) {
+  if (!indopakBySurah.has(v.chapter)) indopakBySurah.set(v.chapter, []);
+  indopakBySurah.get(v.chapter).push(v);
+}
+
 const out = [];
 
 for (let n = FIRST_SURAH; n <= LAST_SURAH; n++) {
@@ -72,6 +82,10 @@ for (let n = FIRST_SURAH; n <= LAST_SURAH; n++) {
   const en = itani.get(n);
   if (!ar || ar.id !== n) throw new Error(`Arabic source is missing surah ${n}`);
   if (!en) throw new Error(`Translation is missing surah ${n}`);
+  const ip = indopakBySurah.get(n) ?? [];
+  if (ip.length !== ar.verses.length || ip.some((v, i) => v.verse !== i + 1)) {
+    throw new Error(`Surah ${n}: ${ar.verses.length} Uthmani verses but ${ip.length} Indopak verses`);
+  }
   if (ar.verses.length !== en.verses.length) {
     throw new Error(`Surah ${n}: ${ar.verses.length} Arabic verses but ${en.verses.length} translated verses`);
   }
@@ -83,6 +97,7 @@ for (let n = FIRST_SURAH; n <= LAST_SURAH; n++) {
     verses: ar.verses.map((v, i) => ({
       number: v.id,
       arabic: v.text,
+      indopak: ip[i].text,
       english: en.verses[i].replace(/\s+/g, ' ').trim(),
     })),
   });
@@ -91,8 +106,10 @@ for (let n = FIRST_SURAH; n <= LAST_SURAH; n++) {
 const data = {
   // Al-Fatihah 1:1, shown above every other surah except At-Tawbah.
   basmala: arabic[0].verses[0].text,
+  basmalaIndopak: indopakBySurah.get(1)[0].text,
   sources: {
     arabic: 'King Fahd Glorious Quran Printing Complex, Hafs Uthmani text (via QuranEnc)',
+    indopak: 'King Fahd Glorious Quran Printing Complex, IndoPak Nastaleeq text',
     english: 'Translation by Talal Itani, ClearQuran.com',
   },
   surahs: out,

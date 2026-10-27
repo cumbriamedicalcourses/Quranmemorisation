@@ -45,7 +45,10 @@ export default function SettingsScreen() {
 
       <Card style={{ gap: 10, marginTop: 16 }}>
         <Text style={styles.fieldLabel}>Sources</Text>
-        <Text style={text.small}>Quran text: {SOURCES.arabic}.</Text>
+        <Text style={text.small}>Quran text: {settings.script === 'uthmani' ? SOURCES.arabic : SOURCES.indopak}.</Text>
+        {settings.script === 'indopak' ? (
+          <Text style={text.small}>Indopak font: DigitalKhatt IndoPak by Amine Anane and Tarteel, SIL Open Font License.</Text>
+        ) : null}
         <Text style={text.small}>{SOURCES.english}.</Text>
       </Card>
 

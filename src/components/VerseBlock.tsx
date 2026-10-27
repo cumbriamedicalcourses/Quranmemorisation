@@ -1,7 +1,8 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import type { Verse } from '@/lib/quran';
-import { colors, fonts } from '@/theme';
+import { verseText, type Verse } from '@/lib/quran';
+import { displayText, type Script } from '@/lib/script';
+import { colors, fonts, quranFonts } from '@/theme';
 
 const ARABIC_DIGITS = '٠١٢٣٤٥٦٧٨٩';
 
@@ -9,8 +10,9 @@ export function toArabicDigits(n: number): string {
   return String(n).replace(/\d/g, (d) => ARABIC_DIGITS[Number(d)]);
 }
 
-// Pause marks and other Quranic annotation signs are never hidden.
-const ONLY_MARKS = /^[ؐ-ًؚ-ٰٟۖ-ۭ۝۞۩]+$/;
+// Pause marks and other Quranic annotation signs are never hidden, including
+// the IndoPak ones in Arabic Extended-A.
+const ONLY_MARKS = /^[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED\u08D3-\u08FF\u034F\u200F]+$/;
 
 /**
  * How much of a verse is hidden while reciting from memory, hiding from the
@@ -29,18 +31,21 @@ function hiddenFrom(wordCount: number, level: HideLevel): number {
 
 export function VerseBlock({
   verse,
+  script,
   highlighted,
   hideLevel = 0,
   showMeaning,
   onPress,
 }: {
   verse: Verse;
+  script: Script;
   highlighted?: boolean;
   hideLevel?: HideLevel;
   showMeaning: boolean;
   onPress?: () => void;
 }) {
-  const words = verse.arabic.split(' ');
+  const words = displayText(verseText(verse, script), script).split(' ');
+  const font = { fontFamily: quranFonts[script] };
   const wordCount = words.filter((w) => !ONLY_MARKS.test(w)).length;
   const firstHidden = hiddenFrom(wordCount, hideLevel);
   let wordIndex = 0;
@@ -53,7 +58,7 @@ export function VerseBlock({
       style={[styles.block, highlighted && styles.highlighted]}
     >
       <View style={styles.arabicRow}>
-        <Text style={styles.arabic} accessibilityLanguage="ar">
+        <Text style={[styles.arabic, font]} accessibilityLanguage="ar">
           {words.map((word, i) => {
             const mark = ONLY_MARKS.test(word);
             const hidden = !mark && wordIndex++ >= firstHidden;
@@ -84,7 +89,6 @@ const styles = StyleSheet.create({
   arabicRow: { flexDirection: 'row-reverse', alignItems: 'center', gap: 10 },
   arabic: {
     flex: 1,
-    fontFamily: fonts.quran,
     fontSize: 30,
     lineHeight: 60,
     color: colors.ink,
@@ -101,6 +105,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  // Amiri Quran's digits suit both scripts; Digital Khatt's are drawn for inline verse ends.
   markerText: { fontFamily: fonts.quran, fontSize: 15, lineHeight: 22, color: colors.ink },
   meaning: { fontFamily: fonts.serif, fontSize: 16, lineHeight: 24, color: colors.muted },
 });
