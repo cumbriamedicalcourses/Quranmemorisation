@@ -5,6 +5,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { BackIcon, HeadphonesIcon } from '@/components/icons';
 import { Button, Card, IconButton, Screen, Stepper, text } from '@/components/ui';
 import { VerseBlock, type HideLevel } from '@/components/VerseBlock';
+import { notesFor } from '@/data/revelation';
 import { basmala, getSurah, getVerses, SOURCES, startsWithBasmala, type LessonRef } from '@/lib/quran';
 import type { Rating } from '@/lib/schedule';
 import { displayText } from '@/lib/script';
@@ -221,6 +222,25 @@ export default function MemoriseScreen() {
         </View>
       </Card>
 
+      {(step === 'listen' || step === 'read') && shown.length > 0
+        ? notesFor(lesson.surah, shown[0].number, shown[shown.length - 1].number).map((note) => (
+            <View key={`${note.surah}:${note.from}`} style={styles.note}>
+              <Text style={styles.noteLabel}>
+                {note.kind === 'reason' ? 'REASON FOR REVELATION' : 'BACKGROUND'} · VERSES {note.from === note.to ? note.from : `${note.from}–${note.to}`}
+              </Text>
+              <Text style={styles.noteText}>
+                {note.text.split('ﷺ').map((part, i) => (
+                  <Text key={i}>
+                    {i > 0 ? <Text style={styles.salawat}>ﷺ</Text> : null}
+                    {part}
+                  </Text>
+                ))}
+              </Text>
+              <Text style={text.small}>Source: {note.source}</Text>
+            </View>
+          ))
+        : null}
+
       {step === 'listen' ? (
         <View style={styles.player}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
@@ -286,6 +306,11 @@ const styles = StyleSheet.create({
     writingDirection: 'rtl',
   },
   pager: { flexDirection: 'row', gap: 8, marginTop: 6 },
+  note: { marginTop: 12, backgroundColor: colors.teal, borderRadius: radius.item, padding: 18, gap: 8 },
+  noteLabel: { fontFamily: fonts.semibold, fontSize: 11, letterSpacing: 0.6, color: colors.accent },
+  noteText: { fontFamily: fonts.serif, fontSize: 16, lineHeight: 24, color: colors.body },
+  // The serif font has no ﷺ glyph, so it is drawn in the Quran font.
+  salawat: { fontFamily: fonts.quran, fontSize: 18 },
   cardFooter: { marginTop: 6, paddingTop: 10, borderTopWidth: 1, borderTopColor: colors.line, gap: 4 },
   toggle: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', minHeight: 44 },
   toggleLabel: { fontFamily: fonts.medium, fontSize: 14, color: colors.body },

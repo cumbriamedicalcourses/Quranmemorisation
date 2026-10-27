@@ -21,6 +21,7 @@ npm run typecheck
 - **Daily plan** (`src/app/index.tsx`): the new lesson, recent revision (sabqi) and older revision (manzil) due today.
 - **Memorise** (`src/app/memorise.tsx`): Listen, Read, Recite, Join and Check for a new lesson; Recite and Check for revision. Students choose how many verses show on screen (3 by default) and hide words from the end of each verse as they grow confident.
 - **Revision schedule** (`src/lib/schedule.ts`): each lesson becomes a portion reviewed after 1, 2, 4, 7, 14 and 30 days, then in a rotating older-revision cycle. *Strong* moves a portion on, *Some mistakes* repeats the gap, *Forgot* brings it back tomorrow. Too much revision, or three missed days, makes a revision-only day. These numbers are a starting proposal for a hifz teacher to review.
+- **Reasons for revelation** (`src/data/revelation.ts`): short notes in our own words from authentic hadith, each with its reference, shown on the Listen and Read steps. No weak or debatable report is used: only reports in Sahih al-Bukhari or Sahih Muslim, or graded sahih or hasan with no dispute over the grading. Approved by Dr Syed Rahil on 27 October 2026.
 - **Course order** (`src/lib/quran.ts`): An-Nas (114) back to An-Naba (78), lessons never crossing a surah boundary.
 
 ## Sources
@@ -49,4 +50,3 @@ A hafiz must still read the text in the app against a printed Mushaf, in both sc
 - The 13-line Indopak page layout (which words sit on each line), once a source with a clear licence is found.
 - The King Fahd Complex Uthmanic Hafs font in place of Amiri Quran, once its licence is confirmed.
 - Accounts, parent-managed accounts for children, Premium and payments.
-- Reasons for revelation.
