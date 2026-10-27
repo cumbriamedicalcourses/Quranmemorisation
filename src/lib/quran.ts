@@ -1,8 +1,12 @@
 import juz30 from '../data/juz30.json';
+import type { Script } from './script';
 
 export interface Verse {
   number: number;
+  /** King Fahd Complex Uthmani text. */
   arabic: string;
+  /** King Fahd Complex IndoPak text. */
+  indopak: string;
   english: string;
 }
 
@@ -21,7 +25,15 @@ export interface LessonRef {
 }
 
 export const SOURCES = juz30.sources;
-export const BASMALA: string = juz30.basmala;
+const BASMALA: Record<Script, string> = { uthmani: juz30.basmala, indopak: juz30.basmalaIndopak };
+
+export function basmala(script: Script): string {
+  return BASMALA[script];
+}
+
+export function verseText(verse: Verse, script: Script): string {
+  return script === 'uthmani' ? verse.arabic : verse.indopak;
+}
 
 const surahs = new Map<number, Surah>((juz30.surahs as Surah[]).map((s) => [s.number, s]));
 

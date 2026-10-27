@@ -27,11 +27,18 @@ export const colors = {
 
 export const fonts = {
   quran: 'AmiriQuran_400Regular',
+  quranIndopak: 'DigitalKhattIndoPak',
   regular: 'Manrope_400Regular',
   medium: 'Manrope_500Medium',
   semibold: 'Manrope_600SemiBold',
   bold: 'Manrope_700Bold',
   serif: 'Newsreader_400Regular',
+};
+
+/** The Quran font for each script. */
+export const quranFonts = {
+  uthmani: fonts.quran,
+  indopak: fonts.quranIndopak,
 };
 
 export const radius = {

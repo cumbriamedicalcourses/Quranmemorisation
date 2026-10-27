@@ -5,10 +5,11 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { BackIcon, HeadphonesIcon } from '@/components/icons';
 import { Button, Card, IconButton, Screen, Stepper, text } from '@/components/ui';
 import { VerseBlock, type HideLevel } from '@/components/VerseBlock';
-import { BASMALA, getSurah, getVerses, SOURCES, startsWithBasmala, type LessonRef } from '@/lib/quran';
+import { basmala, getSurah, getVerses, SOURCES, startsWithBasmala, type LessonRef } from '@/lib/quran';
 import type { Rating } from '@/lib/schedule';
+import { displayText } from '@/lib/script';
 import { useStore } from '@/lib/store';
-import { colors, fonts, radius } from '@/theme';
+import { colors, fonts, quranFonts, radius } from '@/theme';
 
 type Step = 'listen' | 'read' | 'recite' | 'join' | 'check';
 
@@ -36,6 +37,7 @@ export default function MemoriseScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ mode?: string; surah?: string; from?: string; to?: string; portion?: string }>();
   const { state, updateSettings, completeNewLesson, completeReview } = useStore();
+  const { script } = state.settings;
 
   const mode = params.mode === 'review' ? 'review' : 'new';
   const portion = mode === 'review' ? state.portions.find((p) => p.id === params.portion) : undefined;
@@ -155,8 +157,8 @@ export default function MemoriseScreen() {
 
       <Card style={styles.versesCard}>
         {lesson.from === 1 && startsWithBasmala(lesson.surah) ? (
-          <Text style={styles.basmala} accessibilityLanguage="ar">
-            {BASMALA}
+          <Text style={[styles.basmala, { fontFamily: quranFonts[script] }]} accessibilityLanguage="ar">
+            {displayText(basmala(script), script)}
           </Text>
         ) : null}
 
@@ -167,6 +169,7 @@ export default function MemoriseScreen() {
             <VerseBlock
               key={v.number}
               verse={v}
+              script={script}
               highlighted={paged && v.number === highlighted}
               hideLevel={level}
               showMeaning={meaningVisible}
@@ -261,7 +264,7 @@ export default function MemoriseScreen() {
       ) : null}
 
       <Text style={styles.credit}>
-        Quran text: {SOURCES.arabic}. {SOURCES.english}.
+        Quran text: {script === 'uthmani' ? SOURCES.arabic : SOURCES.indopak}. {SOURCES.english}.
       </Text>
     </Screen>
   );
