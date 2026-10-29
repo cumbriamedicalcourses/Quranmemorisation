@@ -33,6 +33,7 @@ The Quran text is never typed or scanned. `npm run build:data` regenerates `src/
 | Arabic text (Uthmani) | King Fahd Glorious Quran Printing Complex, Hafs Uthmani text, via QuranEnc, packaged in [quran-json](https://github.com/risan/quran-json) 3.1.2 | Copied verbatim, never altered |
 | Arabic text (Indopak) | King Fahd Glorious Quran Printing Complex, IndoPak Nastaleeq text, in Unicode from [quran-api](https://github.com/fawazahmed0/quran-api) ([details](data/sources/kfgqpc-indopak.SOURCE.md)) | Copied verbatim; two marks are swapped on screen only, for the font |
 | English meanings | Talal Itani, [ClearQuran](https://clearquran.com) | Written permission from Talal Itani, including commercial use ([details](data/sources/itani-clearquran.PERMISSION.md)). Shown word for word with the credit line "Translation by Talal Itani, ClearQuran.com" |
+| Recitation audio | Mahmoud Khalil Al-Husary (murattal), verse by verse, 128 kbps, from [EveryAyah](https://everyayah.com/data/Husary_128kbps/) | Chosen by Dr Syed Rahil on 29 October 2026. Not stored in this repository (see below) |
 | Fonts | Amiri Quran, Manrope and Newsreader from Google Fonts; [DigitalKhatt IndoPak](https://github.com/DigitalKhatt/indopakfont) by Amine Anane and Tarteel (`assets/fonts`) | SIL Open Font License |
 
 Checks done when building the data:
@@ -43,11 +44,17 @@ Checks done when building the data:
 
 - The Indopak text of Juz 28 to 30 was compared word by word with the Digital Khatt project's IndoPak text. The words match apart from spelling conventions, listed in the [source notes](data/sources/kfgqpc-indopak.SOURCE.md).
 
+### Recitation audio
+
+The Listen step plays the verses on screen one after another, five times, and highlights the verse being recited (`src/components/ListenPlayer.tsx`). Before verse 1 of a surah it plays the Basmala as a separate clip, which is not counted as a verse; the verse files do not contain it.
+
+The 1,132 files (`058001.mp3` to `114006.mp3`, plus `bismillah.mp3`, about 240 MB) are kept out of git. `EXPO_PUBLIC_AUDIO_BASE_URL` points at the folder that holds them (default `/audio/husary/` on the same site). Every file was checked to exist, decode fully and be unique, and its length was compared with its verse's letter count; 14 verses with unusual lengths, listed in the audio report, need a listener check before launch.
+
 A hafiz must still read the text in the app against a printed Mushaf, in both scripts, before launch.
 
 ## Still to do
 
-- Recitation audio, once the King Fahd Complex confirms permission.
+- Host the recitation audio (Firebase Storage) and have the 14 flagged verses checked by a listener.
 - The 13-line Indopak page layout (which words sit on each line), once a source with a clear licence is found.
 - The King Fahd Complex Uthmanic Hafs font in place of Amiri Quran, once its licence is confirmed.
 - Accounts, parent-managed accounts for children, Premium and payments.
