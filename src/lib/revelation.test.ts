@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { REVELATION_NOTES, notesFor } from '../data/revelation.ts';
 
-test('every note sits inside Juz 30 and cites a source', () => {
+test('every note sits inside the course and cites a source', () => {
   for (const n of REVELATION_NOTES) {
     assert.ok(n.surah >= 78 && n.surah <= 114, `surah ${n.surah}`);
     assert.ok(n.from >= 1 && n.from <= n.to, `${n.surah}:${n.from}-${n.to}`);

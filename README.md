@@ -2,7 +2,7 @@
 
 A self-paced Quran memorisation course for beginners, children and adults, aiming to become hafiz. One codebase runs as a website and as iPhone and Android apps (Expo and React Native).
 
-This first version covers **Juz 30**: first-time setup, the daily plan, the five-step memorisation screen and the adaptive revision schedule. Progress is saved on the device. Accounts, Premium and payments come later.
+The course covers **Juz 30, 29 and 28** (surahs 58 to 114), learned in that order: first-time setup, the daily plan, the five-step memorisation screen and the adaptive revision schedule. Progress is saved on the device. Accounts, Premium and payments come later.
 
 ## Running it
 
@@ -26,7 +26,7 @@ npm run typecheck
 
 ## Sources
 
-The Quran text is never typed or scanned. `npm run build:data` regenerates `src/data/juz30.json` from the files in `data/sources/`:
+The Quran text is never typed or scanned. `npm run build:data` regenerates `src/data/course.json` from the files in `data/sources/`:
 
 | What | Source | Terms |
 | --- | --- | --- |
@@ -37,10 +37,11 @@ The Quran text is never typed or scanned. `npm run build:data` regenerates `src/
 
 Checks done when building the data:
 
-- Every surah's verse count matches between the Uthmani, Indopak and English texts (the build stops if not): 37 surahs, 564 verses.
-- The Arabic letters of all 564 verses were compared with the Tanzil Project's text, a separate source. They match, except one spelling convention for a hamza in 80:37 (امرئ written امري with a small hamza in the Uthmani script).
+- Every surah's verse count matches between the Uthmani, Indopak and English texts (the build stops if not): 57 surahs, 1,132 verses.
+- The English is copied as exported from the ClearQuran PDF. The only character removed is the PDF's invisible hyphenation mark (U+0002) inside words such as "sover-eignty".
+- The Arabic letters of all 1,132 verses were compared with the Tanzil Project's text, a separate source. They match, except one spelling convention for the hamza of امرئ in 70:38, 74:52 and 80:37.
 
-- The Indopak text of Juz 30 was compared word by word with the Digital Khatt project's IndoPak text. The words match apart from spelling conventions, listed in the [source notes](data/sources/kfgqpc-indopak.SOURCE.md).
+- The Indopak text of Juz 28 to 30 was compared word by word with the Digital Khatt project's IndoPak text. The words match apart from spelling conventions, listed in the [source notes](data/sources/kfgqpc-indopak.SOURCE.md).
 
 A hafiz must still read the text in the app against a printed Mushaf, in both scripts, before launch.
 
