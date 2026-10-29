@@ -1,4 +1,5 @@
-// Builds src/data/juz30.json from the source files in data/sources.
+// Builds src/data/course.json (Juz 28 to 30, surahs 58 to 114) from the source
+// files in data/sources.
 //
 // Arabic text: King Fahd Complex (KFGQPC) Hafs Uthmani text, as published by
 // QuranEnc and packaged in quran-json 3.1.2. Copied verbatim; never edited.
@@ -12,25 +13,27 @@
 // The script fails if any surah's verse count differs between the sources,
 // so a parsing slip can never silently shift a translation onto the wrong verse.
 //
-// Usage: node scripts/build-juz30.mjs
+// Usage: node scripts/build-course.mjs
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const FIRST_SURAH = 78;
+const FIRST_SURAH = 58;
 const LAST_SURAH = 114;
 
 const arabic = JSON.parse(readFileSync(join(root, 'data/sources/kfgqpc-hafs.quranenc.json'), 'utf8'));
 const indopak = JSON.parse(readFileSync(join(root, 'data/sources/kfgqpc-indopak.quran-api.json'), 'utf8')).quran;
-const itaniLines = readFileSync(join(root, 'data/sources/itani-clearquran.txt'), 'utf8').split(/\r?\n/);
+// The PDF's text export marks its hyphenation points with U+0002 inside words
+// ("sover\u0002eignty"); removing them restores the words as printed.
+const itaniLines = readFileSync(join(root, 'data/sources/itani-clearquran.txt'), 'utf8').replace(/\u0002/g, '').split(/\r?\n/);
 
 function parseItani(lines) {
-  // The table of contents also lists "78. THE EVENT ....", so start at the
-  // surah heading that is followed by its "(an-Naba’)" line.
-  const start = lines.findIndex((line, i) => line.trim() === '78. THE EVENT' && lines[i + 1]?.trim().startsWith('('));
-  if (start === -1) throw new Error('Could not find the start of Surah 78 in the translation');
+  // The table of contents also lists "58. THE ARGUMENT ....", so start at the
+  // surah heading that is followed by its "(al-Mujadilah)" line.
+  const start = lines.findIndex((line, i) => line.trim() === '58. THE ARGUMENT' && lines[i + 1]?.trim().startsWith('('));
+  if (start === -1) throw new Error(`Could not find the start of Surah ${FIRST_SURAH} in the translation`);
 
   const surahs = new Map();
   let current = null;
@@ -115,6 +118,6 @@ const data = {
   surahs: out,
 };
 
-writeFileSync(join(root, 'src/data/juz30.json'), JSON.stringify(data, null, 1) + '\n');
+writeFileSync(join(root, 'src/data/course.json'), JSON.stringify(data, null, 1) + '\n');
 const verseCount = out.reduce((sum, s) => sum + s.verses.length, 0);
-console.log(`Wrote ${out.length} surahs, ${verseCount} verses to src/data/juz30.json`);
+console.log(`Wrote ${out.length} surahs, ${verseCount} verses to src/data/course.json`);

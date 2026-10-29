@@ -5,19 +5,19 @@ import Svg, { Circle } from 'react-native-svg';
 
 import { BookIcon, PlusIcon, ReviseIcon, SettingsIcon } from '@/components/icons';
 import { IconButton, Screen, text } from '@/components/ui';
-import { COURSE_ORDER, describeLesson, estimateLines, getSurah } from '@/lib/quran';
+import { COURSE_ORDER, describeLesson, estimateLines, getSurah, juzOf, type Juz } from '@/lib/quran';
 import { addDays, newLessonMinutes, planDay, revisionMinutes, type Portion } from '@/lib/schedule';
 import { currentStreak, today, useStore } from '@/lib/store';
 import { colors, fonts, radius } from '@/theme';
 
-function memorisedSurahs(portions: Portion[]): number {
+function memorisedSurahs(portions: Portion[], juz: Juz): number {
   const covered = new Map<number, Set<number>>();
   for (const p of portions) {
     const set = covered.get(p.surah) ?? new Set<number>();
     for (let v = p.from; v <= p.to; v++) set.add(v);
     covered.set(p.surah, set);
   }
-  return COURSE_ORDER.filter((n) => (covered.get(n)?.size ?? 0) === getSurah(n).verses.length).length;
+  return COURSE_ORDER.filter((n) => n >= juz.first && n <= juz.last && (covered.get(n)?.size ?? 0) === getSurah(n).verses.length).length;
 }
 
 function formatDate(day: string): string {
@@ -28,7 +28,7 @@ function formatDate(day: string): string {
 const REASON_TEXT = {
   'too-much-revision': 'Revision day. You have more revision due than your daily time, so there is no new lesson today.',
   'catch-up': 'Welcome back. Today is a catch-up day: revise what is due before starting anything new.',
-  'course-finished': 'You have completed every lesson in Juz 30. Keep revising to hold it firmly.',
+  'course-finished': 'You have completed every lesson in the course so far. Keep revising to hold it firmly.',
 } as const;
 
 export default function TodayScreen() {
@@ -50,8 +50,11 @@ export default function TodayScreen() {
 
   if (!state.onboarded) return <Redirect href="/welcome" />;
 
-  const total = COURSE_ORDER.length;
-  const done = memorisedSurahs(state.portions);
+  // Progress is shown for the juz the student is working on now.
+  const lastSurah = state.lastLesson?.surah ?? COURSE_ORDER[0];
+  const juz = juzOf(upcomingLesson?.surah ?? lastSurah);
+  const total = juz.last - juz.first + 1;
+  const done = memorisedSurahs(state.portions, juz);
   const learnedToday = state.portions.some((p) => p.learnedOn === day);
   const showNewLesson = plan.newLesson && upcomingLesson && !learnedToday;
   const newMinutes = upcomingLesson ? newLessonMinutes(estimateLines(upcomingLesson)) : 0;
@@ -77,7 +80,7 @@ export default function TodayScreen() {
 
       <View style={styles.progress}>
         <View style={{ width: ringSize, height: ringSize }}>
-          <Svg width={ringSize} height={ringSize} accessibilityLabel={`Juz 30: ${done} of ${total} surahs memorised`}>
+          <Svg width={ringSize} height={ringSize} accessibilityLabel={`Juz ${juz.number}: ${done} of ${total} surahs memorised`}>
             <Circle cx={42} cy={42} r={r} stroke={colors.deepLine} strokeWidth={6} fill="none" />
             {done > 0 ? (
               <Circle
@@ -100,7 +103,7 @@ export default function TodayScreen() {
           </View>
         </View>
         <View style={{ flex: 1, gap: 4 }}>
-          <Text style={styles.progressEyebrow}>JUZ 30 · JUZ AMMA</Text>
+          <Text style={styles.progressEyebrow}>JUZ {juz.number} · {juz.name.toUpperCase()}</Text>
           <Text style={styles.progressTitle}>
             {done === 1 ? '1 surah memorised' : `${done} surahs memorised`}
           </Text>

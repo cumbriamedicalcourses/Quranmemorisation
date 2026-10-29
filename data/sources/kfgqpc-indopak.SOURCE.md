@@ -8,7 +8,7 @@
 
 ## Checks done
 
-- 6,236 verses, and 564 verses in Juz 30 (surahs 78 to 114), the same counts as the Uthmani text.
+- 6,236 verses, and 1,132 verses in Juz 28 to 30 (surahs 58 to 114), the same counts as the Uthmani text.
 - In Juz 30 the letters of this Unicode copy are identical to the Complex's original file (the `ara-qurannastaleeqn` edition of quran-api). Only the encoding of marks differs.
 - Juz 30 was compared word by word with a separate IndoPak text, the one used by the Digital Khatt project (`quran_text_indopak_15.ts` in DigitalKhatt/digitalkhatt-js). Every word matches except spelling conventions: how the hamza is seated (for example يومئذ), and four words where one text writes a full alif and the other a small (standing) alif. In this text they are (copied from the file):
 
@@ -20,6 +20,18 @@
   | 83:26 | الۡمُتَنٰفِسُوۡنَ (small alif) | full alif |
 
   A hafiz should check these against the printed 13-line mushaf used for the course.
+
+- Juz 28 and 29 (surahs 58 to 77) were compared the same way. Apart from hamza seats, the differences are (words copied from this file):
+
+  | Verse | This text | Digital Khatt text |
+  | --- | --- | --- |
+  | 59:9 | تَبَوَّءُو | written without the final waw |
+  | 60:9 | قَاتَلُوۡكُمۡ (full alif) | small alif |
+  | 60:9 | وَظَاهَرُوۡا (full alif) | small alif |
+  | 63:4 | قَاتَلَهُمُ (full alif) | small alif |
+  | 69:37 | الۡخٰطِـُٔوۡنَ (small alif) | full alif |
+
+  In 59:9 this text agrees with the King Fahd Uthmani text and the Tanzil text. A hafiz should check all of these against the printed 13-line mushaf.
 
 ## Display only: two marks
 

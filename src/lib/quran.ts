@@ -1,4 +1,4 @@
-import juz30 from '../data/juz30.json';
+import course from '../data/course.json';
 import type { Script } from './script';
 
 export interface Verse {
@@ -24,8 +24,8 @@ export interface LessonRef {
   to: number;
 }
 
-export const SOURCES = juz30.sources;
-const BASMALA: Record<Script, string> = { uthmani: juz30.basmala, indopak: juz30.basmalaIndopak };
+export const SOURCES = course.sources;
+const BASMALA: Record<Script, string> = { uthmani: course.basmala, indopak: course.basmalaIndopak };
 
 export function basmala(script: Script): string {
   return BASMALA[script];
@@ -35,10 +35,36 @@ export function verseText(verse: Verse, script: Script): string {
   return script === 'uthmani' ? verse.arabic : verse.indopak;
 }
 
-const surahs = new Map<number, Surah>((juz30.surahs as Surah[]).map((s) => [s.number, s]));
+const surahs = new Map<number, Surah>((course.surahs as Surah[]).map((s) => [s.number, s]));
 
-/** Juz 30 is learned from An-Nas (114) back to An-Naba (78), shortest surahs first. */
-export const COURSE_ORDER: number[] = [...surahs.keys()].sort((a, b) => b - a);
+export interface Juz {
+  number: number;
+  name: string;
+  /** First and last surah; Juz 28 to 30 each hold whole surahs. */
+  first: number;
+  last: number;
+}
+
+/** The course runs Juz 30, then 29, then 28. */
+export const JUZ: Juz[] = [
+  { number: 30, name: 'Juz Amma', first: 78, last: 114 },
+  { number: 29, name: 'Juz Tabarak', first: 67, last: 77 },
+  { number: 28, name: 'Juz Qad Sami', first: 58, last: 66 },
+];
+
+export function juzOf(surah: number): Juz {
+  const juz = JUZ.find((j) => surah >= j.first && surah <= j.last);
+  if (!juz) throw new Error(`Surah ${surah} is not in this course yet`);
+  return juz;
+}
+
+/**
+ * Each juz is learned from its last surah back to its first, as in Juz 30
+ * (An-Nas back to An-Naba), and the juz follow one another 30, 29, 28.
+ */
+export const COURSE_ORDER: number[] = JUZ.flatMap((j) =>
+  Array.from({ length: j.last - j.first + 1 }, (_, i) => j.last - i),
+);
 
 export function getSurah(number: number): Surah {
   const surah = surahs.get(number);
@@ -65,7 +91,7 @@ export function estimateLines(ref: LessonRef): number {
   return Math.round((letters / LETTERS_PER_LINE) * 10) / 10;
 }
 
-/** The lesson after `previous`, or the first lesson when there is none. Null when Juz 30 is complete. */
+/** The lesson after `previous`, or the first lesson when there is none. Null when the course is complete. */
 export function nextLesson(previous: LessonRef | null, versesPerDay: number): LessonRef | null {
   let surahIndex = 0;
   let from = 1;
