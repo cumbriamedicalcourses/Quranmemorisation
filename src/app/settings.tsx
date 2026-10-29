@@ -4,6 +4,7 @@ import { StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { BackIcon } from '@/components/icons';
 import { Button, Card, IconButton, Screen, Stepper, text } from '@/components/ui';
+import { RECITER } from '@/lib/audio';
 import { SOURCES } from '@/lib/quran';
 import { useStore } from '@/lib/store';
 import { colors, fonts } from '@/theme';
@@ -50,6 +51,7 @@ export default function SettingsScreen() {
           <Text style={text.small}>Indopak font: DigitalKhatt IndoPak by Amine Anane and Tarteel, SIL Open Font License.</Text>
         ) : null}
         <Text style={text.small}>{SOURCES.english}.</Text>
+        <Text style={text.small}>Recitation: {RECITER}, verse by verse, from EveryAyah.com.</Text>
       </Card>
 
       <Card style={{ gap: 12, marginTop: 16 }}>

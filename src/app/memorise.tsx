@@ -2,7 +2,9 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { BackIcon, HeadphonesIcon } from '@/components/icons';
+import { BackIcon } from '@/components/icons';
+import { ListenPlayer } from '@/components/ListenPlayer';
+import { RECITER } from '@/lib/audio';
 import { Button, Card, IconButton, Screen, Stepper, text } from '@/components/ui';
 import { VerseBlock, type HideLevel } from '@/components/VerseBlock';
 import { notesFor } from '@/data/revelation';
@@ -56,7 +58,6 @@ export default function MemoriseScreen() {
   const [hideLevel, setHideLevel] = useState<HideLevel>(mode === 'review' ? 3 : 1);
   const [peeking, setPeeking] = useState<Set<number>>(new Set());
   const [revealed, setRevealed] = useState(false);
-  const [listens, setListens] = useState(0);
   const [showMeaning, setShowMeaning] = useState(true);
   const [finished, setFinished] = useState<Rating | null>(null);
 
@@ -242,21 +243,12 @@ export default function MemoriseScreen() {
         : null}
 
       {step === 'listen' ? (
-        <View style={styles.player}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-            <HeadphonesIcon color={colors.goldSoft} />
-            <View style={{ flex: 1, gap: 2 }}>
-              <Text style={styles.playerTitle}>Recitation audio is coming soon</Text>
-              <Text style={styles.playerSub}>Until then, listen to a recitation you trust. Count each full listen here.</Text>
-            </View>
-          </View>
-          <View style={styles.listenRow}>
-            <Text style={styles.playerTitle} accessibilityLiveRegion="polite">
-              Listened {listens} of {LISTEN_TARGET}
-            </Text>
-            <Button label="I listened once" kind="onDeep" onPress={() => setListens((n) => n + 1)} />
-          </View>
-        </View>
+        <ListenPlayer
+          surah={lesson.surah}
+          verses={shown.map((v) => v.number)}
+          target={LISTEN_TARGET}
+          onVerse={(v) => v !== null && setFocus(v)}
+        />
       ) : null}
 
       {step === 'recite' ? (
@@ -284,7 +276,7 @@ export default function MemoriseScreen() {
       ) : null}
 
       <Text style={styles.credit}>
-        Quran text: {script === 'uthmani' ? SOURCES.arabic : SOURCES.indopak}. {SOURCES.english}.
+        Quran text: {script === 'uthmani' ? SOURCES.arabic : SOURCES.indopak}. {SOURCES.english}. Recitation: {RECITER}.
       </Text>
     </Screen>
   );
@@ -318,10 +310,6 @@ const styles = StyleSheet.create({
   switchOn: { backgroundColor: colors.accent },
   knob: { width: 22, height: 22, borderRadius: 11, backgroundColor: '#FFFFFF' },
   knobOn: { transform: [{ translateX: 18 }] },
-  player: { marginTop: 12, backgroundColor: colors.deep, borderRadius: radius.card, padding: 18, gap: 14 },
-  playerTitle: { fontFamily: fonts.semibold, fontSize: 14, color: colors.onDeep },
-  playerSub: { fontFamily: fonts.regular, fontSize: 12, lineHeight: 17, color: colors.onDeepMuted },
-  listenRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' },
   hideRow: { flexDirection: 'row', gap: 8, marginTop: 12 },
   ratingRow: { flexDirection: 'row', gap: 8, flexWrap: 'wrap' },
   footerRow: { flexDirection: 'row', gap: 10, paddingTop: 10 },
